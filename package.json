@@ -1,68 +1,71 @@
 {
-  "name": "starwars-server-stitchSchemas",
-  "version": "0.1.5",
-  "author": "dev",
-  "description": "GraphQL Server setup",
-  "scripts": {
-    "start": "nodemon ./server.js --exec babel-node",
-    "lint": "eslint ."
-  },
-  "dependencies": {
-    "apollo-server-express": "^2.15.1",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "graphql": "^14.6.0",
-    "graphql-tools": "^6.0.12",
-    "lodash": "^4.17.15",
-    "node-fetch": "^2.6.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.10.4",
-    "@babel/core": "^7.10.4",
-    "@babel/node": "^7.10.4",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/plugin-proposal-decorators": "^7.10.4",
-    "@babel/plugin-proposal-do-expressions": "^7.10.4",
-    "@babel/plugin-proposal-export-default-from": "^7.10.4",
-    "@babel/plugin-proposal-export-namespace-from": "^7.10.4",
-    "@babel/plugin-proposal-function-bind": "^7.10.4",
-    "@babel/plugin-proposal-function-sent": "^7.10.4",
-    "@babel/plugin-proposal-json-strings": "^7.10.4",
-    "@babel/plugin-proposal-logical-assignment-operators": "^7.10.4",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
-    "@babel/plugin-proposal-numeric-separator": "^7.10.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.10.4",
-    "@babel/plugin-proposal-pipeline-operator": "^7.10.4",
-    "@babel/plugin-proposal-throw-expressions": "^7.10.4",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/polyfill": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.10.4",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-inline-import": "^3.0.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.19.0",
-    "nodemon": "^2.0.3"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "extends": [
-      "airbnb/base",
-      "plugin:import/errors"
-    ],
-    "rules": {
-      "no-use-before-define": 0,
-      "arrow-body-style": 0,
-      "dot-notation": 0,
-      "no-console": 0
-    },
-    "env": {
-      "mocha": true
-    }
-  }
+	"name": "starwars-server-stitchSchemas",
+	"version": "0.1.5",
+	"author": "dev",
+	"description": "GraphQL Server setup",
+	"scripts": {
+		"start": "nodemon ./server.js --exec babel-node",
+		"lint": "eslint ."
+	},
+	"dependencies": {
+		"@graphql-tools/delegate": "^6.0.13",
+		"@graphql-tools/stitch": "^6.0.13",
+		"@graphql-tools/utils": "^6.0.13",
+		"@graphql-tools/wrap": "^6.0.13",
+		"apollo-server-express": "^2.15.1",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"graphql": "^14.6.0",
+		"lodash": "^4.17.15",
+		"node-fetch": "^2.6.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.10.4",
+		"@babel/core": "^7.10.4",
+		"@babel/node": "^7.10.4",
+		"@babel/plugin-proposal-class-properties": "^7.10.4",
+		"@babel/plugin-proposal-decorators": "^7.10.4",
+		"@babel/plugin-proposal-do-expressions": "^7.10.4",
+		"@babel/plugin-proposal-export-default-from": "^7.10.4",
+		"@babel/plugin-proposal-export-namespace-from": "^7.10.4",
+		"@babel/plugin-proposal-function-bind": "^7.10.4",
+		"@babel/plugin-proposal-function-sent": "^7.10.4",
+		"@babel/plugin-proposal-json-strings": "^7.10.4",
+		"@babel/plugin-proposal-logical-assignment-operators": "^7.10.4",
+		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+		"@babel/plugin-proposal-numeric-separator": "^7.10.4",
+		"@babel/plugin-proposal-optional-chaining": "^7.10.4",
+		"@babel/plugin-proposal-pipeline-operator": "^7.10.4",
+		"@babel/plugin-proposal-throw-expressions": "^7.10.4",
+		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
+		"@babel/plugin-syntax-import-meta": "^7.10.4",
+		"@babel/polyfill": "^7.10.4",
+		"@babel/preset-env": "^7.10.4",
+		"@babel/preset-react": "^7.10.4",
+		"babel-eslint": "^10.1.0",
+		"babel-plugin-inline-import": "^3.0.0",
+		"eslint": "^7.4.0",
+		"eslint-config-airbnb": "^18.2.0",
+		"eslint-plugin-import": "^2.22.0",
+		"eslint-plugin-jsx-a11y": "^6.3.1",
+		"eslint-plugin-react": "^7.20.3",
+		"nodemon": "^2.0.4"
+	},
+	"eslintConfig": {
+		"parser": "babel-eslint",
+		"extends": [
+			"airbnb/base",
+			"plugin:import/errors"
+		],
+		"rules": {
+			"no-use-before-define": 0,
+			"arrow-body-style": 0,
+			"dot-notation": 0,
+			"no-console": 0
+		},
+		"env": {
+			"mocha": true
+		}
+	}
 }
