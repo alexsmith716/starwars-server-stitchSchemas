@@ -9,10 +9,6 @@ import fetch from 'node-fetch';
 // ==========================================================
 
 import {
-	introspectSchema,
-} from 'graphql-tools';
-
-import {
 	stitchSchemas,
 } from '@graphql-tools/stitch';
 
@@ -27,6 +23,7 @@ import {
 	RenameTypes,
 	RenameRootFields,
 	TransformQuery,
+	introspectSchema,
 } from '@graphql-tools/wrap';
 
 import {
@@ -39,7 +36,7 @@ import {
 
 import swapiSchema from './data/schema';
 
-const PORT = 4001;
+const PORT = 4000;
 const app = express();
 app.use('*', cors());
 
@@ -60,7 +57,7 @@ app.use('*', cors());
 
 //	namespaces
 //	check for type name collisions
-//	Apollo's default behaviour is take the last API in as the final definition
+//	Apollo's default is take the last API in as the final definition
 //	resolve by transforming the API before merging
 //	'stitchSchemas' will by default pick the implementation of the last schema that was passed to it
 //	https://www.advancedgraphql.com/content/schema-stitching/ex3
@@ -102,17 +99,22 @@ async function apolloServer() {
 	//	introspection: discover the schemas, and merges all of the types together
 	//	makeRemoteExecutableSchema => wrapSchema
 
-	const remoteSchemaRickandmortyapi = await introspectSchema(executor);
+	//	const remoteSchemaRickandmortyapi = await introspectSchema(executor);
 
 	//	const remoteSchemaRickandmortyapi = new SchemaTransform(remoteSchemaRickandmortyapiX, [
 	//		new RenameTypes((name) => `Chirp_${name}`),
 	//		new RenameRootFields((name) => `Chirp_${name}`),
 	//	]);
 
-	const wrappedSchema = wrapSchema({
-		schema: remoteSchemaRickandmortyapi,
-		executor,
-	});
+	//	const wrappedSchema = wrapSchema({
+	//		schema: remoteSchemaRickandmortyapi,
+	//		executor,
+	//	});
+
+  const wrappedSchema = wrapSchema({
+    schema: await introspectSchema(executor),
+    executor,
+  });
 
 	const chirpSchemaTransforms = [
 		new RenameTypes((name) => `Chirp_${name}`),
