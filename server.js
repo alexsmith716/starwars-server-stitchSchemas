@@ -4,9 +4,15 @@ import { createServer } from 'http';
 import cors from 'cors';
 
 import { print } from 'graphql';
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
+import { fetch } from 'cross-fetch';
 
 // ==========================================================
+
+//	{
+//	  "message": "Response.text: Body has already been consumed.",
+//	  "stack": "fetcher/<@http://localhost:8080/dist/StickyFooter.0e615d35ce45125676aa.js:81:4257\n"
+//	}
 
 import {
 	stitchSchemas,
@@ -86,35 +92,22 @@ const executor = async ({ document, variables }) => {
 
 // --------------------------------------------------------------
 
-//	createRemoteSchema
-async function apolloServer() {
+//	Remote schemas::
+//		Create a remote executable schema with custom executor:
+//			1. Create a executor that can retrieve results from that schema
+//			2. Use introspectSchema to get the non-executable schema of the remote server
+//			3. Use wrapSchema to create a schema that uses the executor to delegate requests to the underlying service
+//	https://www.graphql-tools.com/docs/remote-schemas/#creating-a-subscriber
+//	======================================================================
+//	introspection: discover the schemas, and merges all of the types together
+//	makeRemoteExecutableSchema => wrapSchema
 
-	//	Remote schemas::
-	//		Create a remote executable schema with custom executor:
-	//			1. Create a executor that can retrieve results from that schema
-	//			2. Use introspectSchema to get the non-executable schema of the remote server
-	//			3. Use wrapSchema to create a schema that uses the executor to delegate requests to the underlying service
-	//	https://www.graphql-tools.com/docs/remote-schemas/#creating-a-subscriber
-	//	======================================================================
-	//	introspection: discover the schemas, and merges all of the types together
-	//	makeRemoteExecutableSchema => wrapSchema
+(async () => {
 
-	//	const remoteSchemaRickandmortyapi = await introspectSchema(executor);
-
-	//	const remoteSchemaRickandmortyapi = new SchemaTransform(remoteSchemaRickandmortyapiX, [
-	//		new RenameTypes((name) => `Chirp_${name}`),
-	//		new RenameRootFields((name) => `Chirp_${name}`),
-	//	]);
-
-	//	const wrappedSchema = wrapSchema({
-	//		schema: remoteSchemaRickandmortyapi,
-	//		executor,
-	//	});
-
-  const wrappedSchema = wrapSchema({
-    schema: await introspectSchema(executor),
-    executor,
-  });
+	const wrappedSchema = wrapSchema({
+		schema: await introspectSchema(executor),
+		executor,
+	});
 
 	const chirpSchemaTransforms = [
 		new RenameTypes((name) => `Chirp_${name}`),
@@ -154,27 +147,19 @@ async function apolloServer() {
 		console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 		console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
 	});
-}
 
-// --------------------------------------------------------------
-
-try {
-	console.log('>>>> APOLLO SERVER > START');
-	apolloServer();
-}  catch (err) {
-	console.log('>>>> APOLLO SERVER > ERROR: ', err);
-}
+})();
 
 // --------------------------------------------------------------
 
 // The type of Query.hero(episode:) must be Input Type but got: Episode.
-// 
+//
 // The type of Query.reviews(episode:) must be Input Type but got: Episode!.
-// 
+//
 // The type of Mutation.createReview(episode:) must be Input Type but got: Episode.
-// 
+//
 // The type of Subscription.reviewAdded(episode:) must be Input Type but got: Episode.
-// 
+//
 // Type Human must only implement Interface types, it cannot implement Character.
-// 
+//
 // Type Droid must only implement Interface types, it cannot implement Character.
