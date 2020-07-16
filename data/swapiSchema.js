@@ -16,9 +16,6 @@ import { PubSub, SubscriptionManager, withFilter } from 'graphql-subscriptions';
 const pubsub = new PubSub();
 const ADDED_REVIEW_TOPIC = 'new_review';
 
-// ##################################################################################
-// ##################################################################################
-// ##################################################################################
 // Interfaces serve as parent objects from which other objects can inherit
 
 const schemaString = `
@@ -132,10 +129,6 @@ type Starship {
 union SearchResult = Human | Droid | Starship
 `;
 
-// ##################################################################################
-// ##################################################################################
-// ##################################################################################
-
 /**
  * This defines a basic set of data for our Star Wars Schema.
  *
@@ -201,8 +194,6 @@ humans.forEach((ship) => {
   humanData[ship.id] = ship;
 });
 
-// ------------------------------------------------------------------
-
 const droids = [
   {
     id: '2000',
@@ -225,8 +216,6 @@ const droidData = {};
 droids.forEach((ship) => {
   droidData[ship.id] = ship;
 });
-
-// ------------------------------------------------------------------
 
 const starships = [
   {
@@ -265,25 +254,13 @@ var reviews = {
   'JEDI': []
 };
 
-//var reviews = {
-//  'NEWHOPE': [{episode: "NEWHOPE", stars: 5, commentary: "This is a great movie?!?!" }],
-//  'EMPIRE': [{episode: "EMPIRE", stars: 3, commentary: "This IS a great movie?" }, {episode: "EMPIRE", stars: 1, commentary: "This is NOT a great movie!" }],
-//  'JEDI': []
-//};
-
-// ##################################################################################
-// ##################################################################################
-// ##################################################################################
-
 /**
  * Helper function to get a character by ID.
  */
 function getCharacter(id) {
   // Returning a promise just to illustrate GraphQL.js's support.
   const a = Promise.resolve(humanData[id] || droidData[id]);
-  console.log('>>>> APOLLOSERVER > function getCharacter(id): ', a);
   return a;
-  // return Promise.resolve(humanData[id] || droidData[id]);
 }
 
 /**
@@ -291,7 +268,6 @@ function getCharacter(id) {
  */
 function getFriends(character) {
   const b = Promise.resolve(humanData[id] || droidData[id]);
-  console.log('>>>> APOLLOSERVER > function getFriends(character): ', b);
   return b;
   // return character.friends.map(id => getCharacter(id));
 }
@@ -326,11 +302,7 @@ function getHuman(id) {
  * Allows us to query for the droid with the given id.
  */
 function getDroid(id) {
-  const gg = droidData[id];
-  console.log('>>>> APOLLOSERVER > function getDroid(id) typeof: ', typeof gg);
-  console.log('>>>> APOLLOSERVER > function getDroid(id): ', gg);
-  return gg;
-  // return droidData[id];
+  return droidData[id];
 }
 
 function getStarship(id) {
@@ -344,10 +316,6 @@ function toCursor(str) {
 function fromCursor(str) {
   return Buffer.from(str, 'base64').toString().slice(6);
 }
-
-// ##################################################################################
-// ##################################################################################
-// ##################################################################################
 
 const resolvers = {
 
@@ -366,7 +334,6 @@ const resolvers = {
         ...droids,
         ...starships,
       ];
-      console.log('>>>> APOLLOSERVER > 1111111111111111');
       return allData.filter((obj) => re.test(obj.name));
     },
   },
@@ -376,7 +343,6 @@ const resolvers = {
       reviews[episode].push(review);
       review.episode = episode;
       pubsub.publish(ADDED_REVIEW_TOPIC, {reviewAdded: review});
-      console.log('>>>> APOLLOSERVER > Mutation > PUSH > review: ', review);
       return review;
     },
   },
@@ -396,14 +362,11 @@ const resolvers = {
   Character: {
     __resolveType(data, context, info){
       if(humanData[data.id]){
-      	console.log('>>>> APOLLOSERVER > 1111111111111111 nhnhnhnghn');
         return info.schema.getType('Human');
       }
       if(droidData[data.id]){
-      	console.log('>>>> APOLLOSERVER > 1111111111111111 gbbfgbfgbgf');
         return info.schema.getType('Droid');
       }
-      console.log('>>>> APOLLOSERVER > 1111111111111111 vvfdvdfvdf');
       return null;
     },
   },
@@ -450,7 +413,6 @@ const resolvers = {
         node: getCharacter(friend)
       })).slice(after, first + after);
       const slicedFriends = edges.map(({ node }) => node);
-      console.log('>>>> APOLLOSERVER > 1111111111111111 nmjmjhmhjmjhmhjmhjmhj');
       return {
         edges,
         friends: slicedFriends,
@@ -496,7 +458,6 @@ const resolvers = {
         return info.schema.getType('Human');
       }
       if(droidData[data.id]){
-      	console.log('>>>> APOLLOSERVER > 1111111111111111 fvgbgfbfgbfgbfgbfgbgf');
         return info.schema.getType('Droid');
       }
       if(starshipData[data.id]){
@@ -506,10 +467,6 @@ const resolvers = {
     },
   },
 }
-
-// ##################################################################################
-// ##################################################################################
-// ##################################################################################
 
 /**
  * Finally, we construct our schema (whose starting query type is the query

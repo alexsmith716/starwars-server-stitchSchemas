@@ -4,15 +4,7 @@ import { createServer } from 'http';
 import cors from 'cors';
 
 import { print } from 'graphql';
-// import fetch from 'node-fetch';
-import { fetch } from 'cross-fetch';
-
-// ==========================================================
-
-//	{
-//	  "message": "Response.text: Body has already been consumed.",
-//	  "stack": "fetcher/<@http://localhost:8080/dist/StickyFooter.0e615d35ce45125676aa.js:81:4257\n"
-//	}
+import fetch from 'node-fetch';
 
 import {
 	stitchSchemas,
@@ -38,46 +30,12 @@ import {
 	getDirectives,
 } from '@graphql-tools/utils';
 
-// ==========================================================
-
 import swapiSchema from './data/schema';
 
 const PORT = 4000;
 const app = express();
 app.use('*', cors());
 
-// --------------------------------------------------------------
-
-//	SchemaTransform,
-//	transformSchema
-//	delegateToSchema
-
-//	https://swapi.dev/about
-//	https://swapi.dev/documentation
-//	https://swapi.dev/api/people/1/
-
-//	schema discovery
-
-//	working with remote schemas
-//	schema-wrapping 
-
-//	namespaces
-//	check for type name collisions
-//	Apollo's default is take the last API in as the final definition
-//	resolve by transforming the API before merging
-//	'stitchSchemas' will by default pick the implementation of the last schema that was passed to it
-//	https://www.advancedgraphql.com/content/schema-stitching/ex3
-
-//	In most cases, the last API in wins in name collisions, 
-//		but that’s not what we want – we want each API to be able to work internally, 
-//		and we want to avoid collisions, both in calls, internal function calls, naming conventions, 
-//		and generally as a point of data integrity.
-
-// --------------------------------------------------------------
-
-//	Executor::
-//		an executor is a function capable of retrieving GraphQL results
-//		used to do introspection or fetch results during execution
 const executor = async ({ document, variables }) => {
 	const query = print(document);
 	const fetchResult = await fetch('https://rickandmortyapi.com/graphql', {
@@ -89,18 +47,6 @@ const executor = async ({ document, variables }) => {
 	});
 	return fetchResult.json();
 };
-
-// --------------------------------------------------------------
-
-//	Remote schemas::
-//		Create a remote executable schema with custom executor:
-//			1. Create a executor that can retrieve results from that schema
-//			2. Use introspectSchema to get the non-executable schema of the remote server
-//			3. Use wrapSchema to create a schema that uses the executor to delegate requests to the underlying service
-//	https://www.graphql-tools.com/docs/remote-schemas/#creating-a-subscriber
-//	======================================================================
-//	introspection: discover the schemas, and merges all of the types together
-//	makeRemoteExecutableSchema => wrapSchema
 
 (async () => {
 
@@ -119,22 +65,14 @@ const executor = async ({ document, variables }) => {
 		transforms: chirpSchemaTransforms,
 	}
 
-	//	mergeSchemas => stitchSchemas
 	const finalSchema = stitchSchemas({
 		subschemas: [
-			// swapiSchema,
-			// wrappedSchema,
-			// { schema: swapiSchema },		<<<< BAD
-			// { schema: wrappedSchema },	<<<< BAD
-			// { schema: swapiSchema },
-			// { schema: chirpSubschema },
 			swapiSchema,
 			chirpSubschema
 		],
 	});
 
 	const server = new ApolloServer({
-		//	schema: schema,
 		schema: finalSchema,
 		subscriptions: { path: "/websocket" }
 	});
@@ -149,17 +87,3 @@ const executor = async ({ document, variables }) => {
 	});
 
 })();
-
-// --------------------------------------------------------------
-
-// The type of Query.hero(episode:) must be Input Type but got: Episode.
-//
-// The type of Query.reviews(episode:) must be Input Type but got: Episode!.
-//
-// The type of Mutation.createReview(episode:) must be Input Type but got: Episode.
-//
-// The type of Subscription.reviewAdded(episode:) must be Input Type but got: Episode.
-//
-// Type Human must only implement Interface types, it cannot implement Character.
-//
-// Type Droid must only implement Interface types, it cannot implement Character.
